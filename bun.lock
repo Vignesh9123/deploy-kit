@@ -22,14 +22,14 @@
       "name": "frontend",
       "version": "0.1.0",
       "dependencies": {
-        "@repo/ui": "*",
+        "@deploykit/ui": "*",
         "next": "16.2.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
       },
       "devDependencies": {
-        "@repo/eslint-config": "*",
-        "@repo/typescript-config": "*",
+        "@deploykit/eslint-config": "*",
+        "@deploykit/typescript-config": "*",
         "@types/node": "^22.15.3",
         "@types/react": "19.2.2",
         "@types/react-dom": "19.2.2",
@@ -47,7 +47,7 @@
       },
     },
     "packages/eslint-config": {
-      "name": "@repo/eslint-config",
+      "name": "@deploykit/eslint-config",
       "version": "0.0.0",
       "devDependencies": {
         "@eslint/js": "^9.39.1",
@@ -64,19 +64,19 @@
       },
     },
     "packages/typescript-config": {
-      "name": "@repo/typescript-config",
+      "name": "@deploykit/typescript-config",
       "version": "0.0.0",
     },
     "packages/ui": {
-      "name": "@repo/ui",
+      "name": "@deploykit/ui",
       "version": "0.0.0",
       "dependencies": {
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
       },
       "devDependencies": {
-        "@repo/eslint-config": "*",
-        "@repo/typescript-config": "*",
+        "@deploykit/eslint-config": "*",
+        "@deploykit/typescript-config": "*",
         "@types/node": "^22.15.3",
         "@types/react": "19.2.2",
         "@types/react-dom": "19.2.2",
@@ -86,6 +86,12 @@
     },
   },
   "packages": {
+    "@deploykit/eslint-config": ["@deploykit/eslint-config@workspace:packages/eslint-config"],
+
+    "@deploykit/typescript-config": ["@deploykit/typescript-config@workspace:packages/typescript-config"],
+
+    "@deploykit/ui": ["@deploykit/ui@workspace:packages/ui"],
+
     "@emnapi/runtime": ["@emnapi/runtime@1.10.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA=="],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.9.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ=="],
@@ -192,12 +198,6 @@
 
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg=="],
 
-    "@repo/eslint-config": ["@repo/eslint-config@workspace:packages/eslint-config"],
-
-    "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
-
-    "@repo/ui": ["@repo/ui@workspace:packages/ui"],
-
     "@swc/helpers": ["@swc/helpers@0.5.15", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g=="],
 
     "@turbo/darwin-64": ["@turbo/darwin-64@2.9.14", "", { "os": "darwin", "cpu": "x64" }, "sha512-t7QiPflaEyBE4oayeZtSmu4mEfjgIrcNlNNl1z1dmIVPqEdtA7+CfTf8d7KXsOGPh6aNgWjKxyvQg9uGfDQF+A=="],
@@ -278,7 +278,7 @@
 
     "baseline-browser-mapping": ["baseline-browser-mapping@2.10.32", "", { "bin": { "baseline-browser-mapping": "dist/cli.cjs" } }, "sha512-wbPvpyjJPC0zdfdKXxqEL3Ea+bOMD/87X4lftiJkkaBiuG6ALQy1SLmEd7BSmVCuwCQsBrCamgBoLyfFDD1EPg=="],
 
-    "brace-expansion": ["brace-expansion@1.1.14", "", { "dependencies": { "balanced-match": "^1.0.0", "concat-map": "0.0.1" } }, "sha512-MWPGfDxnyzKU7rNOW9SP/c50vi3xrmrua/+6hfPbCS2ABNWfx24vPidzvC7krjU/RTo235sV776ymlsMtGKj8g=="],
+    "brace-expansion": ["brace-expansion@1.1.15", "", { "dependencies": { "balanced-match": "^1.0.0", "concat-map": "0.0.1" } }, "sha512-EwOCDEex4quD37XhqM3omwtMoJjr//isUZz1JopUNWms+4Z2ViyM/k1YIRePpoVNnQhENnxtFjLaxNHrT7xIUg=="],
 
     "braces": ["braces@3.0.3", "", { "dependencies": { "fill-range": "^7.1.1" } }, "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA=="],
 
