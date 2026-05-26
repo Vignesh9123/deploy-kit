@@ -63,3 +63,5 @@ model Deployment {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 }
+
+// TODO: Store logs as well

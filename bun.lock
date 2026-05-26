@@ -13,6 +13,7 @@
       "name": "backend",
       "dependencies": {
         "@deploykit/db": "*",
+        "hono": "^4.12.23",
       },
       "devDependencies": {
         "@types/bun": "latest",
