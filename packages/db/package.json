@@ -2,6 +2,10 @@
   "name": "@deploykit/db",
   "version": "0.0.0",
   "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
   "scripts": {
     "dev": "echo 'Add dev script here'",
     "build": "echo 'Add build script here'",
@@ -12,6 +16,7 @@
     "@deploykit/typescript-config": "*"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "prisma": "^7.8.0"
   }
 }
