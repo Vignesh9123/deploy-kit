@@ -11,3 +11,53 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum DeploymentStatus {
+  PENDING
+  BUILDING
+  DEPLOYING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id      String  @id @default(cuid())
+  name    String
+  email   String @unique
+  projects Project[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model GitRepository {
+  id      String  @id @default(cuid())
+  url     String  @unique
+  projects Project[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  user_id     String
+  user        User    @relation(fields: [user_id], references: [id])
+  repo_id     String
+  gitRepo     GitRepository  @relation(fields: [repo_id], references: [id])
+  url         String
+  deployments Deployment[]
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model Deployment {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  project_id  String
+  project     Project @relation(fields: [project_id], references: [id])
+  status      DeploymentStatus
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
