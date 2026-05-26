@@ -1,0 +1,53 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+  
+    environment:
+      - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
+      - REDIS_URL=redis://redis:6379
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
+      - REDIS_URL=redis://redis:6379
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=deploykit
+      - POSTGRES_PASSWORD=deploykit
+      - POSTGRES_DB=deploykit
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
