@@ -40,7 +40,6 @@ model GitRepository {
 model Project {
   id          String  @id @default(cuid())
   name        String
-  description String
   user_id     String
   user        User    @relation(fields: [user_id], references: [id])
   repo_id     String
