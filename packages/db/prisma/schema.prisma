@@ -45,7 +45,7 @@ model Project {
   user        User    @relation(fields: [user_id], references: [id])
   repo_id     String
   gitRepo     GitRepository  @relation(fields: [repo_id], references: [id])
-  url         String
+  url         String? // TODO: Will make it required eventually
   deployments Deployment[]
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
