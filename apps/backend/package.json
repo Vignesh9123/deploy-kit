@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@deploykit/db": "*",
+    "@hono/zod-validator": "^0.8.0",
+    "firebase-admin": "^13.10.0",
     "hono": "^4.12.23"
   },
   "devDependencies": {

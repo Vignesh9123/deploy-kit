@@ -53,9 +53,8 @@ model Project {
 model Deployment {
   id          String  @id @default(cuid())
   name        String
-  url         String // Will move it to project eventually
-  image_tag   String
-  description String
+  url         String? // Will move it to project eventually
+  image_tag   String?
   project_id  String
   project     Project @relation(fields: [project_id], references: [id])
   status      DeploymentStatus
