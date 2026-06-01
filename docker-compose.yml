@@ -35,6 +35,8 @@ services:
       - BUILDKIT_HOST=tcp://buildkit:1234
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
   buildkit:
     image: moby/buildkit
@@ -52,6 +54,8 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
   postgres:
     image: postgres:16-alpine
