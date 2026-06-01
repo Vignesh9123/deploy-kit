@@ -9,4 +9,7 @@ app.get('/', (c) => c.text('Hello Bun!'))
 
 app.route('/auth', auth)
 
-export default app
+export default {
+    port: 3001,
+    fetch: app.fetch
+}

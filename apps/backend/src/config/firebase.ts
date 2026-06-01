@@ -1,6 +1,6 @@
-import * as admin from "firebase-admin";
+import { initializeApp } from 'firebase-admin/app';
 import { env } from ".";
 
-export const firebaseApp = admin.initializeApp({
+export const firebaseApp = initializeApp({
     projectId: env.FIREBASE_PROJECT_ID,
 });

@@ -17,7 +17,6 @@ services:
     depends_on:
       - postgres
       - redis
-  
     environment:
       - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
       - REDIS_URL=redis://redis:6379
@@ -29,9 +28,30 @@ services:
     depends_on:
       - postgres
       - redis
+      - buildkit
     environment:
       - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
       - REDIS_URL=redis://redis:6379
+      - BUILDKIT_HOST=tcp://buildkit:1234
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  buildkit:
+    image: moby/buildkit
+    privileged: true
+    restart: always
+    command: --addr tcp://0.0.0.0:1234
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2019:2019"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
 
   postgres:
     image: postgres:16-alpine
@@ -51,3 +71,5 @@ services:
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:
