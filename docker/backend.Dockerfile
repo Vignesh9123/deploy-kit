@@ -11,4 +11,4 @@ RUN bun install
 COPY --from=pruner /app/out/full/ .
 
 WORKDIR /app/apps/backend
-CMD ["bun", "run", "index.ts"]
+CMD ["bun", "run", "dev"]

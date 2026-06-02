@@ -7,26 +7,27 @@ import { $ } from "bun";
 
 const GIT_REPO_URL = "https://github.com/railwayapp-templates/nextjs-basic.git";
 
-async function clone_repo(url: string) {
-  const output = await $`git clone ${url} ./sample`;
+async function clone_repo(payload: DeploymentPayload) {
+  const output = await $`git clone ${payload.repo_url} ./${payload.project_id}`;
   console.log(output);
-  return './sample';
+  return `./${payload.project_id}`;
 }
 
-async function build_image(folder: string) {
+async function build_image(folder: string, payload: DeploymentPayload) {
     const output = await $`railpack build ${folder}`;
     console.log(output);
-    return 'sample';
+    return payload.project_id;
 }
 
-async function get_free_port() { // TODO: Implement this
-    // const output = await $`lsof -i :0 -t`;
-    // console.log(output);
-    return 3030;
+async function get_free_port() { 
+    const response = await fetch("http://host.docker.internal:3030/free-port");
+    const data = await response.json() as {port: number};
+    console.log("Got free port",data);
+    return data.port;
 }
 
-async function run_image(image: string, port: number) {
-    const output = await $`docker run -d -p ${port}:3000 ${image}`;
+async function run_image(image: string, port: number, containerPort: number) {
+    const output = await $`docker run -d -p ${port}:${containerPort} ${image}`;
     console.log("Ran image",output);
     const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
@@ -91,17 +92,26 @@ await fetch("http://caddy:2019/config/apps", requestOptions)
     console.log(`Access image at http://${image}.localhost`);
     return output;
 }
-
-async function main() {
-    console.log("Cloning repo...",GIT_REPO_URL);
-    const folder = await clone_repo(GIT_REPO_URL);
+interface DeploymentPayload {
+  project_id: string, 
+  repo_url: string,
+  container_port: number
+}
+async function main(payload: DeploymentPayload) {
+    console.log("Cloning repo...",payload.repo_url);
+    const folder = await clone_repo(payload);
     console.log("Building image in...",folder);
-    const image = await build_image(folder);
+    const image = await build_image(folder, payload);
     console.log("Getting free port...");
-    const port = await get_free_port();
-    console.log("Running image...",image,"on port",port);
-    await run_image(image, port);
-    console.log(`Image running on port ${port}`);
+    const hostPort = await get_free_port();
+    console.log("Running image...",image,"on port",hostPort);
+    await run_image(image, hostPort, payload.container_port);
+    console.log(`Image running on port ${hostPort}`);
 }
 
-main().catch(console.error);
+const payload = {
+  project_id: crypto.randomUUID(),
+  repo_url: GIT_REPO_URL,
+  container_port: 3000
+}
+main(payload).catch(console.error);
