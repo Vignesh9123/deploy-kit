@@ -26,7 +26,7 @@ auth.post("/login",
         const token = await generateToken({
             id: existingUser.id
         });
-        setCookie(c,"token", token, { httpOnly: true , sameSite: "none" ,secure: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+        setCookie(c,"token", token, { httpOnly: true , sameSite: "none" ,secure: true, maxAge: 7 * 24 * 60 * 60});
         return c.json({
             message: "Login successful",
             data:{
@@ -40,7 +40,7 @@ auth.post("/login",
     const token = await generateToken({
         id: user.id
     });
-    setCookie(c,"token", token, { httpOnly: true , sameSite: "none", secure: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+    setCookie(c,"token", token, { httpOnly: true , sameSite: "none", secure: true, maxAge: 7 * 24 * 60 * 60 });
     return c.json({
         message: "Login successful",
         data:{

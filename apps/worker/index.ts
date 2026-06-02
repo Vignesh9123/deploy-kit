@@ -6,6 +6,8 @@
 import { $ } from "bun";
 import { Queue, Worker } from "bullmq";
 import {config} from 'dotenv'
+import { prisma } from "@deploykit/db";
+import { DeploymentStatus } from "@deploykit/db/generated/prisma/enums";
 
 config();
 
@@ -99,25 +101,49 @@ await fetch("http://caddy:2019/config/apps", requestOptions)
 interface DeploymentPayload {
   project_id: string, 
   repo_url: string,
-  container_port: number
+  container_port: number,
+  deployment_id: string,
 }
 async function main(payload: DeploymentPayload) {
-    console.log("Cloning repo...",payload.repo_url);
-    const folder = await clone_repo(payload);
-    console.log("Building image in...",folder);
-    const image = await build_image(folder, payload);
-    console.log("Getting free port...");
-    const hostPort = await get_free_port();
-    console.log("Running image...",image,"on port",hostPort);
-    await run_image(image, hostPort, payload.container_port);
-    console.log(`Image running on port ${hostPort}`);
+    try {
+        await prisma.deployment.update({
+            where: { id: payload.deployment_id },
+            data: { status: DeploymentStatus.BUILDING }
+        });
+        console.log("Cloning repo...",payload.repo_url);
+        const folder = await clone_repo(payload);
+        console.log("Building image in...",folder);
+        const image = await build_image(folder, payload);
+        
+        console.log("Getting free port...");
+        const hostPort = await get_free_port();
+        
+        await prisma.deployment.update({
+            where: { id: payload.deployment_id },
+            data: { status: DeploymentStatus.DEPLOYING }
+        });
+        console.log("Running image...",image,"on port",hostPort);
+        await run_image(image, hostPort, payload.container_port);
+        console.log(`Image running on port ${hostPort}`);
+
+        await prisma.project.update({
+            where: { id: payload.project_id },
+            data: { url: `http://${image}.localhost` }
+        });
+        await prisma.deployment.update({
+            where: { id: payload.deployment_id },
+            data: { status: DeploymentStatus.SUCCESS }
+        });
+    } catch (error) {
+        console.error("Deployment failed:", error);
+        await prisma.deployment.update({
+            where: { id: payload.deployment_id },
+            data: { status: DeploymentStatus.FAILED }
+        });
+        throw error;
+    }
 }
 
-const payload = {
-  project_id: crypto.randomUUID(),
-  repo_url: GIT_REPO_URL,
-  container_port: 3000
-}
 // main(payload).catch(console.error);
 await new Promise(resolve => setTimeout(resolve, 1000));
 const myWorker = new Worker('myqueue', async job => {
@@ -125,6 +151,6 @@ const myWorker = new Worker('myqueue', async job => {
   await main(job.data);
 }, {
   connection: {
-    url: process.env.QUEUE_URL
+    url: process.env.REDIS_URL
   },
 });

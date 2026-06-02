@@ -27,10 +27,14 @@ deployment.post("/",
         const project = await prisma.project.findUnique({where:{id: projectId}, include:{gitRepo: true}});
         if(!project) throw new HTTPException(404, {message:"Project not found"});
         if(project.user_id !== user.id) throw new HTTPException(403, {message:"Forbidden"});
+        const deployment = await prisma.deployment.create({data:{name, project_id: project.id, status: DeploymentStatus.PENDING}});
+        if(!deployment) throw new HTTPException(500, {message:"Something went wrong while creating deployment"});
         const payload = {
             project_id: project.id,
             repo_url: project.gitRepo.url,
-            port
+            container_port: port,
+            deployment_id: deployment.id,
+
         }
         const queue = new Queue('myqueue', {
             connection: {
@@ -39,8 +43,6 @@ deployment.post("/",
           })
         console.log("Adding job",payload);
         await queue.add("sample",payload);
-        const deployment = await prisma.deployment.create({data:{name, project_id: project.id, status: DeploymentStatus.PENDING}});
-        if(!deployment) throw new HTTPException(500, {message:"Something went wrong while creating deployment"});
         return c.json({
             message: "Deployment created",
             data: {

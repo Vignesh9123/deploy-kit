@@ -113,3 +113,5 @@ project.delete("/:id",authMiddleware, async(c)=>{
         }
     })
 })
+
+export { project }
