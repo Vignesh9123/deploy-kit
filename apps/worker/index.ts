@@ -4,6 +4,10 @@
 // Run image on the free port
 
 import { $ } from "bun";
+import { Queue, Worker } from "bullmq";
+import {config} from 'dotenv'
+
+config();
 
 const GIT_REPO_URL = "https://github.com/railwayapp-templates/nextjs-basic.git";
 
@@ -114,4 +118,13 @@ const payload = {
   repo_url: GIT_REPO_URL,
   container_port: 3000
 }
-main(payload).catch(console.error);
+// main(payload).catch(console.error);
+await new Promise(resolve => setTimeout(resolve, 1000));
+const myWorker = new Worker('myqueue', async job => {
+  console.log("Running job",job.data);
+  await main(job.data);
+}, {
+  connection: {
+    url: process.env.QUEUE_URL
+  },
+});
