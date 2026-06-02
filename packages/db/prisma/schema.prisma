@@ -56,7 +56,7 @@ model Deployment {
   url         String? // Will move it to project eventually
   image_tag   String?
   project_id  String
-  project     Project @relation(fields: [project_id], references: [id])
+  project     Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
   status      DeploymentStatus
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
