@@ -3,7 +3,10 @@ import { cors } from 'hono/cors'
 import { auth } from './routes/auth.routes'
 const app = new Hono().basePath('/api')
 
-app.use(cors())
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+}))
 
 app.get('/', (c) => c.text('Hello Bun!'))
 

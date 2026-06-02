@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { firebaseApp } from "../config/firebase";
+import { getAuth } from "firebase-admin/auth";
 import { prisma } from "@deploykit/db";
 import { generateToken } from "../utils/jwt";
 import { deleteCookie, setCookie } from "hono/cookie";
@@ -9,15 +10,15 @@ import type { TokenPayload } from "../types";
 import { zValidator } from "@hono/zod-validator";
 import * as z from 'zod'
 const auth = new Hono();
-
+firebaseApp()
 auth.post("/login",
     zValidator('json', z.object({
-        idtoken: z.string()
+        idToken: z.string()
     })),
     async (c) => {       
-    const {idtoken} = c.req.valid('json');
-    if(!idtoken) throw new HTTPException(400, {message:"Missing required fields"});
-    const decodedToken = await firebaseApp.auth().verifyIdToken(idtoken)
+    const {idToken} = c.req.valid('json');
+    if(!idToken) throw new HTTPException(400, {message:"Missing required fields"});
+    const decodedToken = await getAuth().verifyIdToken(idToken)
     const { name, email } = decodedToken
     if(!name || !email) throw new HTTPException(400, {message:"Missing required fields"});
     const existingUser = await prisma.user.findFirst({where:{ email }});
