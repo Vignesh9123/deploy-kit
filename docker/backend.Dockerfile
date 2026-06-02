@@ -10,5 +10,8 @@ COPY --from=pruner /app/out/json/ .
 RUN bun install
 COPY --from=pruner /app/out/full/ .
 
+WORKDIR /app/packages/db
+RUN bunx prisma generate
+
 WORKDIR /app/apps/backend
 CMD ["bun", "run", "dev"]
