@@ -5,3 +5,7 @@
 fe.vignesh-tech.me {
         reverse_proxy host.docker.internal:3000
 }
+
+be.vignesh-tech.me {
+        reverse_proxy host.docker.internal:3001
+}
