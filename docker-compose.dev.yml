@@ -35,6 +35,9 @@ services:
       - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
       - REDIS_URL=redis://redis:6379
       - BUILDKIT_HOST=tcp://buildkit:1234
+      - DEPLOYMENT_SUBDOMAIN=.localhost
+      - DEPLOYMENT_PROTOCOL=http
+      - ENVIRONMENT=dev  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     extra_hosts:
