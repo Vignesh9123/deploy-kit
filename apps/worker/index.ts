@@ -12,6 +12,8 @@ import { DeploymentStatus } from "@deploykit/db/generated/prisma/enums";
 config();
 
 const GIT_REPO_URL = "https://github.com/railwayapp-templates/nextjs-basic.git";
+const DEPLOYMENT_SUBDOMAIN = process.env.DEPLOYMENT_SUBDOMAIN;
+const DEPLOYMENT_PROTOCOL = process.env.DEPLOYMENT_PROTOCOL;
 
 async function clone_repo(payload: DeploymentPayload) {
   const output = await $`git clone ${payload.repo_url} ./${payload.project_id}`;
@@ -57,7 +59,9 @@ const requestOptions = {
   body: raw,
 };
 
-await fetch("http://caddy:2019/config/apps", requestOptions)
+if(process.env.ENVIRONMENT=='dev'){
+    await fetch("http://caddy:2019/config/apps", requestOptions)
+}
     const body = JSON.stringify({
         "handle": [
           {
@@ -81,7 +85,7 @@ await fetch("http://caddy:2019/config/apps", requestOptions)
         "match": [
           {
             "host": [
-              `${image}.localhost`
+              `${image}${DEPLOYMENT_SUBDOMAIN}`
             ]
           }
         ],
@@ -95,7 +99,7 @@ await fetch("http://caddy:2019/config/apps", requestOptions)
         body
     });
     console.log("Response from Caddy",await res.json());
-    console.log(`Access image at http://${image}.localhost`);
+    console.log(`Access image at ${DEPLOYMENT_PROTOCOL}://${image}${DEPLOYMENT_SUBDOMAIN}`);
     return output;
 }
 interface DeploymentPayload {
@@ -128,7 +132,7 @@ async function main(payload: DeploymentPayload) {
 
         await prisma.project.update({
             where: { id: payload.project_id },
-            data: { url: `http://${image}.localhost` }
+            data: { url: `${DEPLOYMENT_PROTOCOL}://${image}${DEPLOYMENT_SUBDOMAIN}` }
         });
         await prisma.deployment.update({
             where: { id: payload.deployment_id },

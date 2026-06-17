@@ -7,7 +7,7 @@ const app = new Hono().basePath('/api')
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'https://fe.vignesh-tech.com']
 }))
 
 app.get('/', (c) => c.text('Hello Bun!'))
