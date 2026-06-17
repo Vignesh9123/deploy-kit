@@ -8,7 +8,7 @@ services:
     depends_on:
       - backend
     environment:
-      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+      - NEXT_PUBLIC_BACKEND_URL=https://be.vignesh-tech.me
 
   backend:
     build:
@@ -53,7 +53,7 @@ services:
       - "443:443"
       - "2019:2019"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile.prod:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     extra_hosts:

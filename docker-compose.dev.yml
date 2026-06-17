@@ -1,0 +1,81 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
+      - REDIS_URL=redis://redis:6379
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    depends_on:
+      - postgres
+      - redis
+      - buildkit
+    environment:
+      - DATABASE_URL=postgresql://deploykit:deploykit@postgres:5432/deploykit
+      - REDIS_URL=redis://redis:6379
+      - BUILDKIT_HOST=tcp://buildkit:1234
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+  buildkit:
+    image: moby/buildkit
+    privileged: true
+    restart: always
+    command: --addr tcp://0.0.0.0:1234
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2019:2019"
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=deploykit
+      - POSTGRES_PASSWORD=deploykit
+      - POSTGRES_DB=deploykit
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
