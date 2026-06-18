@@ -6,7 +6,10 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "check-types": "turbo run check-types",
+    "start-fps": "cd ./apps/free-port-server && bun index.ts",
+    "start-prod": "concurrently \"npm run start-fps\" \"docker compose -f docker-compose.prod.yml up\"",
+    "start-dev": "concurrently \"npm run start-fps\" \"docker compose -f docker-compose.dev.yml up\""
   },
   "devDependencies": {
     "prettier": "^3.7.4",
@@ -20,5 +23,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "concurrently": "^10.0.3"
+  }
 }
