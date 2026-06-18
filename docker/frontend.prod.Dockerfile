@@ -12,4 +12,9 @@ COPY --from=pruner /app/out/full/ .
 
 WORKDIR /app/apps/frontend
 
-CMD ["bun", "run", "dev"]
+ARG NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+
+RUN bun run build
+
+CMD ["bun", "run", "start"]

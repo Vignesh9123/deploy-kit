@@ -2,7 +2,9 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: docker/frontend.Dockerfile
+      dockerfile: docker/frontend.prod.Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=https://be.vignesh-tech.me
     ports:
       - "3000:3000"
     depends_on:
