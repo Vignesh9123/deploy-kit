@@ -41,7 +41,7 @@ services:
       - DEPLOYMENT_PROTOCOL=https
       - ENVIRONMENT=prod   
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock # TODO: This might be a problem as host's docker access is given and user code might have malicious docker runs in their code
     extra_hosts:
     - "host.docker.internal:host-gateway"
 
