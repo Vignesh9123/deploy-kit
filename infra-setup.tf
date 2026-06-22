@@ -22,7 +22,7 @@ resource "aws_security_group" "allow_ssh" {
         from_port   = 22
         to_port     = 22
         protocol    = "tcp"
-        cidr_blocks = ["49.37.171.105/32"]
+        cidr_blocks = ["0.0.0.0/0"] // TODO: Will add var using github repo var
     }
 
     egress {
