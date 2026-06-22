@@ -4,6 +4,7 @@ run-name: Bring up EC2 and setup the codebase
 
 env:
     AWS_REGION: "ap-south-1"
+    AWS_PROFILE: "terraform-learning"
 jobs:
     setup:
         name: Setup
