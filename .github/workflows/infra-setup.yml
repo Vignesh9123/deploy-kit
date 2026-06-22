@@ -1,0 +1,28 @@
+name: infra-setup
+on: workflow_dispatch
+run-name: Bring up EC2 and setup the codebase
+
+env:
+    AWS_REGION: "ap-south-1"
+jobs:
+    setup:
+        name: Setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v4
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ env.AWS_REGION }}
+                aws-profile: terraform-learning
+            - name: Terraform Init and Apply
+              run: |
+                terraform init
+                terraform apply -auto-approve
+            - name: Complete
+              run: echo "Setup complete"
