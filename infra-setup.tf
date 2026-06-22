@@ -12,6 +12,13 @@ provider "aws" {
     region  = "ap-south-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "tf-state-sample-9123"
+    key    = "sample.tfstate"
+    region = "ap-south-1"
+  }
+}
 
 resource "aws_security_group" "allow_ssh" {
     name        = "terraform-learning-allow-ssh"
