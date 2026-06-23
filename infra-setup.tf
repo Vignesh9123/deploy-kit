@@ -21,7 +21,7 @@ terraform {
 }
 
 resource "aws_security_group" "allow_ssh" {
-    name        = "terraform-learning-allow-ssh"
+    name        = "deploykit-allow-ssh"
     description = "Allow SSH inbound"
 
     ingress {
@@ -40,7 +40,7 @@ resource "aws_security_group" "allow_ssh" {
     }
 
     tags = {
-        Name = "terraform-learning-sg"
+        Name = "deploykit-sg"
     }
 }
 
@@ -97,7 +97,7 @@ resource "aws_instance" "my_first_server" {
 EOF
 
   tags = {
-    Name = "terraform-learning-instance"
+    Name = "deploykit-instance"
   }
 }
 
