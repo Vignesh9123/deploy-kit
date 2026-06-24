@@ -43,7 +43,7 @@ resource "aws_security_group" "allow_ssh" {
     }
 }
 
-resource "aws_instance" "my_first_server" {
+resource "aws_instance" "deploykit_instance" {
   ami           = "ami-01a00762f46d584a1"
   instance_type = "t3.micro"
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
@@ -103,5 +103,5 @@ EOF
 
 output "instance_public_ip" {
   description = "Public IP of the EC2 instance"
-  value       = aws_instance.my_first_server.public_ip
+  value       = aws_instance.deploykit_instance.public_ip
 }
