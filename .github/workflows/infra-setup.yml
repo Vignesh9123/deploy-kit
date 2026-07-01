@@ -5,9 +5,6 @@ run-name: Bring up EC2 and setup the codebase
 env:
     AWS_REGION: "ap-south-1"
 
-permissions:
-  variables: write
-
 jobs:
     setup:
         name: Setup
