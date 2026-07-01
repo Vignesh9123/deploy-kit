@@ -27,7 +27,7 @@ jobs:
                 terraform apply -auto-approve
             - name: Set IP to gh repo var
               env:
-                GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                GH_TOKEN: ${{secrets.PAT_TOKEN}}
               run: |
                 gh variable set EC2_IP --body "$(terraform output -raw instance_public_ip)"  
             - name: Complete
