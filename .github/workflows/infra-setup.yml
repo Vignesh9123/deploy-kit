@@ -4,6 +4,10 @@ run-name: Bring up EC2 and setup the codebase
 
 env:
     AWS_REGION: "ap-south-1"
+
+permissions:
+  variables: write
+
 jobs:
     setup:
         name: Setup
@@ -24,5 +28,10 @@ jobs:
               run: |
                 terraform init
                 terraform apply -auto-approve
+            - name: Set IP to gh repo var
+              env:
+                GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+              run: |
+                gh variable set EC2_IP --body "$(terraform output -raw instance_public_ip)"  
             - name: Complete
               run: echo "Setup complete"
