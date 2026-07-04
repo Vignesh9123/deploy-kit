@@ -1,0 +1,31 @@
+name: ci-cd
+on: push 
+run-name: Deploy with new code
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Execute Remote SSH Commands
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ vars.EC2_IP  }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            cd /ubuntu/deploy-kit
+            git pull
+            docker compose build
+            docker compose down
+            bun run start-prod
+      
+      - name: Complete
+        run: echo "CICD complete"
+
+
