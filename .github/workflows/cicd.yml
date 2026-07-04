@@ -21,9 +21,9 @@ jobs:
           script: |
             cd /home/ubuntu/deploy-kit
             git pull
-            docker compose -f docker-compose.prod.yml build
-            docker compose -f docker-compose.prod.yml down
-            bun run start-prod
+            sudo docker compose -f docker-compose.prod.yml build
+            sudo docker compose -f docker-compose.prod.yml down
+            sudo /home/ubuntu/.bun/bin/bun run start-prod
       
       - name: Complete
         run: echo "CICD complete"
