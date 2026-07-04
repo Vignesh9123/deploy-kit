@@ -19,7 +19,7 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            cd /ubuntu/deploy-kit
+            cd /home/ubuntu/deploy-kit
             git pull
             docker compose -f docker-compose.prod.yml build
             docker compose -f docker-compose.prod.yml down
