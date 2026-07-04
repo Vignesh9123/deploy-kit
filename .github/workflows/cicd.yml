@@ -21,8 +21,8 @@ jobs:
           script: |
             cd /ubuntu/deploy-kit
             git pull
-            docker compose build
-            docker compose down
+            docker compose -f docker-compose.prod.yml build
+            docker compose -f docker-compose.prod.yml down
             bun run start-prod
       
       - name: Complete
