@@ -8,8 +8,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start-fps": "cd ./apps/free-port-server && bun index.ts",
-    "start-prod": "concurrently \"npm run start-fps\" \"docker compose -f docker-compose.prod.yml up\"",
-    "start-dev": "concurrently \"npm run start-fps\" \"docker compose -f docker-compose.dev.yml up\""
+    "start-fps-prod":"cd ./apps/free-port-server && pm2 start index.ts --interpreter /home/ubuntu/.bun/bin/bun --name 'deploy-kit-free-port-server'",
+    "TODO":"Figure out a method to not hardcode interpreter in this",
+    "start-prod": "concurrently \"bun run start-fps-prod\" \"docker compose -f docker-compose.prod.yml up -d\"",
+    "start-dev": "concurrently \"bun run start-fps\" \"docker compose -f docker-compose.dev.yml up\""
   },
   "devDependencies": {
     "prettier": "^3.7.4",
@@ -25,6 +27,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "concurrently": "^10.0.3"
+    "concurrently": "^10.0.3",
+    "pm2": "^7.0.3"
   }
 }

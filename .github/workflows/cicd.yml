@@ -25,7 +25,7 @@ jobs:
             sudo docker compose -f docker-compose.prod.yml down
             cd ./apps/free-port-server
             /home/ubuntu/.bun/bin/bun install
-            /home/ubuntu/.bun/bin/bun add concurrently
+            /home/ubuntu/.bun/bin/bun add concurrently pm2
             cd /home/ubuntu/deploy-kit
             sudo /home/ubuntu/.bun/bin/bun run start-prod
       
