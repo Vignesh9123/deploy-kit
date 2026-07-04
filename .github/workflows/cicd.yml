@@ -26,6 +26,7 @@ jobs:
             cd ./apps/free-port-server
             /home/ubuntu/.bun/bin/bun install
             /home/ubuntu/.bun/bin/bun add concurrently
+            cd /home/ubuntu/deploy-kit
             sudo /home/ubuntu/.bun/bin/bun run start-prod
       
       - name: Complete
