@@ -45,8 +45,20 @@ resource "aws_security_group" "allow_ssh" {
 
 resource "aws_instance" "deploykit_instance" {
   ami           = "ami-01a00762f46d584a1"
-  instance_type = "t3.micro"
+  instance_type = "t3.medium"
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  
+  root_block_device {
+    volume_size           = 16
+    volume_type           = "gp3"
+    encrypted             = true
+    delete_on_termination = true
+
+    tags = {
+      Name = "root-volume"
+    }
+  }
+  
   key_name               = "vignesh"
   user_data = <<-EOF
     #!/bin/bash
